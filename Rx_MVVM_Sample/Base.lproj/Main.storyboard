@@ -10,10 +10,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Repository List Controller-->
+        <!--Article List Controller-->
         <scene sceneID="Ov5-MM-wGA">
             <objects>
-                <viewController title="Repository List Controller" id="jGR-rP-i7f" customClass="ArticleListController" customModule="Rx_MVVM_Sample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Article List Controller" id="jGR-rP-i7f" customClass="ArticleListController" customModule="Rx_MVVM_Sample" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="S5L-Vu-YOL"/>
                         <viewControllerLayoutGuide type="bottom" id="Ol7-PS-Iys"/>
