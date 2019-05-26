@@ -76,7 +76,6 @@
                     <connections>
                         <outlet property="articleListTableView" destination="DVl-OR-VdM" id="RhL-tH-1RJ"/>
                         <outlet property="nameSearchBar" destination="uqA-2r-k2K" id="c8P-2g-I57"/>
-                        <outlet property="tableViewBottomConstraint" destination="gRD-Th-uc9" id="VHM-W1-1m5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GCu-eE-mA7" userLabel="First Responder" sceneMemberID="firstResponder"/>
