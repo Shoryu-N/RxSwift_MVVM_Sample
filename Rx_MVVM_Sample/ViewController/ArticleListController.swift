@@ -22,7 +22,6 @@ class ArticleListController: UIViewController {
     @IBOutlet var articleListTableView: UITableView!
     
     
-    @IBOutlet weak var tableViewBottomConstraint: NSLayoutConstraint!
     
     let disposeBag = DisposeBag()
     
@@ -65,12 +64,12 @@ class ArticleListController: UIViewController {
         }
         .disposed(by: disposeBag)
        
-        //リクエストした結果の更新を元に表示に関する処理を行う（取得したデータの件数に応じたエラーハンドリング処理）
+        //取得したデータの件数が０の時のエラーハンドリング処理
         articleViewModel
         .rx_articles
             .drive(onNext: { articles in
                 if articles.count == 0 {
-                    let alert = UIAlertController(title: ":(", message: "No Articles", preferredStyle: .alert)
+                    let alert = UIAlertController(title: "(|-|)", message: "No Articles", preferredStyle: .alert)
                  alert.addAction(UIAlertAction(title: "OK!", style: .default, handler: nil))
                 
                     if self.navigationController?.visibleViewController is UIAlertController != true {
@@ -90,52 +89,12 @@ class ArticleListController: UIViewController {
         let tap = UITapGestureRecognizer(target: self, action: #selector(tableTapped(_:)))
         articleListTableView.addGestureRecognizer(tap)
         
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillShow(_:)),
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil)
-        
-        //Case2. キーボードを閉じた場合のイベント
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillHide(_:)),
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil)
     }
 
 
 
 
-    @objc func keyboardWillShow(_ notification: Notification) {
-        
-        //キーボードのサイズを取得する（英語のキーボードが基準になるので日本語のキーボードだと少し見切れてしまう）
-        guard let keyboardFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
-        
-        //一覧表示用テーブルビューのAutoLayoutの制約を更新して高さをキーボード分だけ縮める
-        tableViewBottomConstraint.constant = keyboardFrame.height
-        UIView.animate(withDuration: 0.3, animations: {
-            self.view.updateConstraints()
-        })
-    }
-
-    //キーボード非表示表示時に発動されるメソッド
-    @objc func keyboardWillHide(_ notification: Notification) {
-        
-        //一覧表示用テーブルビューのAutoLayoutの制約を更新して高さを元に戻す
-        tableViewBottomConstraint.constant = 0.0
-        UIView.animate(withDuration: 0.3, animations: {
-            self.view.updateConstraints()
-        })
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
-
-    
-    //テーブルビューのセルタップ時に発動されるメソッド
+//テーブルビューのセルタップ時に発動されるメソッド
     @objc func tableTapped(_ recognizer: UITapGestureRecognizer) {
         
         //どのセルがタップされたかを探知する
