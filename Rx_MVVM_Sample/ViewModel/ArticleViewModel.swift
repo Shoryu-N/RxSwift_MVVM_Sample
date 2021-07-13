@@ -11,18 +11,13 @@ import RxAlamofire
 import RxCocoa
 import RxSwift
 
-
-struct ArticleViewModel {
-    
+struct ArticleViewModel {    
     lazy var rx_articles: Driver<[Article]> = self.fetchArticles()
-//  監視対象の変数
     private var articleName: Observable<String>
-//  初期化
     init(withNameObservable nameObservable: Observable<String>) {
         self.articleName = nameObservable
     }
     
-//    QiitaのAPIからデータを取得
     private func fetchArticles() -> Driver<[Article]> {
         return articleName
         .subscribeOn(MainScheduler.instance)
@@ -39,7 +34,6 @@ struct ArticleViewModel {
                         return Observable.never()
                 }
         }
-        
         .observeOn(ConcurrentDispatchQueueScheduler(qos: .background))
         .map { (response, json) -> [Article] in
             if let art = Mapper<Article>().mapArray(JSONObject: json) {
@@ -54,9 +48,5 @@ struct ArticleViewModel {
                 UIApplication.shared.isNetworkActivityIndicatorVisible = false
             })
         .asDriver(onErrorJustReturn: [])
-        
-        
-        
-        
     }
 }
