@@ -20,8 +20,5 @@ class Article: Mappable {
         title <- map["title"]
         url <- map["url"]
     }
-    
-
-
 }
 
