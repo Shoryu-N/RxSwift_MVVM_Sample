@@ -12,22 +12,13 @@ import RxCocoa
 import ObjectMapper
 import RxAlamofire
 
-
 class ArticleListController: UIViewController {
-    
-    
-//    UI parts
+        
     @IBOutlet weak var nameSearchBar: UISearchBar!
-    
     @IBOutlet var articleListTableView: UITableView!
-    
-    
-    
+  
     let disposeBag = DisposeBag()
-    
-//    ViewModelのインスタンス格納用
     var articleViewModel: ArticleViewModel!
-    
     var rx_searchBarText: Observable<String> {
         return nameSearchBar.rx.text
             .filter { $0 != nil }
@@ -36,23 +27,17 @@ class ArticleListController: UIViewController {
         .debounce(0.5, scheduler: MainScheduler.instance)
         .distinctUntilChanged()
     }
-    
-    
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         setupRx()
-        setupUI()
-        
-        
+        setupUI()     
     }
-    
-    //ViewModelを経由してQiitaの情報を取得してテーブルビューに検索結果を表示する
-    func setupRx(){
-        
+ 
+    func setupRx(){       
         articleViewModel = ArticleViewModel(withNameObservable: rx_searchBarText)
         
-        //リクエストした結果の更新を元に表示に関する処理を行う（テーブルビューへのデータ一覧の表示処理）
         articleViewModel
         .rx_articles
             .drive(articleListTableView.rx.items) { (tableView, i, article) in
@@ -64,7 +49,6 @@ class ArticleListController: UIViewController {
         }
         .disposed(by: disposeBag)
        
-        //取得したデータの件数が０の時のエラーハンドリング処理
         articleViewModel
         .rx_articles
             .drive(onNext: { articles in
@@ -79,40 +63,22 @@ class ArticleListController: UIViewController {
                     
                 }
             })
-        .disposed(by: disposeBag)
-        
+        .disposed(by: disposeBag) 
     }
-
-    
-    func setupUI(){
-        
+   
+    func setupUI(){     
         let tap = UITapGestureRecognizer(target: self, action: #selector(tableTapped(_:)))
         articleListTableView.addGestureRecognizer(tap)
-        
     }
-
-
-
-
-//テーブルビューのセルタップ時に発動されるメソッド
-    @objc func tableTapped(_ recognizer: UITapGestureRecognizer) {
-        
-        //どのセルがタップされたかを探知する
+    
+    @objc func tableTapped(_ recognizer: UITapGestureRecognizer) {    
         let location = recognizer.location(in: articleListTableView)
         let path = articleListTableView.indexPathForRow(at: location)
         
-        //キーボードが表示されているか否かで処理を分ける
         if nameSearchBar.isFirstResponder {
-            
-            //キーボードを閉じる
             nameSearchBar.resignFirstResponder()
-            
         } else if let path = path {
-            
-            //タップされたセルを中央位置に持ってくる
             articleListTableView.selectRow(at: path, animated: true, scrollPosition: .middle)
         }
-        
     }
-
 }
